@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UsersController;
+use App\Http\Middleware\MyFirstMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,24 +16,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('usuarios')->name('user.')
-    ->controller(UsersController::class)
-    ->group(function(){
-    Route::get('/','index')->name('index');
-    Route::get('/create', 'create')->name('create');
-    Route::post('/create','store')->name('store');
-    //Route::get('/{user:email}','show')->name('show');
-    Route::get('/{user}','show')->name('show')
-        ->missing(function(Request $request){
-            return redirect()->route('user.index');
-        });
-    Route::get('/edit/{user}','edit')->name('edit');
-    Route::put('/update/{id}','update')->name('update');
-    Route::delete('/delete/{user}','destroy')->name('destroy');
-});
+// Route::prefix('usuarios')->name('user.')
+//     ->controller(UsersController::class)
+//     ->group(function(){
+//     Route::get('/','index')->name('index');
+//     Route::get('/create', 'create')->name('create');
+//     Route::post('/create','store')->name('store');
+//     //Route::get('/{user:email}','show')->name('show');
+//     Route::get('/{user}','show')->name('show')
+//         ->missing(function(Request $request){
+//             return redirect()->route('user.index');
+//         });
+//     Route::get('/edit/{user}','edit')->name('edit');
+//     Route::put('/update/{id}','update')->name('update');
+//     Route::delete('/delete/{user}','destroy')->name('destroy');
+// });
 
 Route::fallback(function(){
    dd("Essa rota não existe");
 });
 
-//Route::resource("/usuarios", UsersController::class);
+Route::resource("/user", UsersController::class)->middleware(['MyFirstMiddleware']);
