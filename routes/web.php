@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UsersController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,10 +15,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/usuarios', [UsersController::class, 'index'])->name('user.index');
-Route::get('/usuario/create',[UsersController::class, 'create'])->name('user.create');
-Route::post('/usuario/create',[UsersController::class, 'store'])->name('user.store');
-Route::get('/usuario/{id}', [UsersController::class, 'show'])->name('user.show');
-Route::get('/usuario/edit/{id}', [UsersController::class, 'edit'])->name('user.edit');
-Route::put('/usuario/update/{id}', [UsersController::class, 'update'])->name('user.update');
-Route::delete('/usuario/delete/{id}', [UsersController::class, 'destroy'])->name('user.destroy');
+Route::prefix('usuarios')->name('user.')
+    ->controller(UsersController::class)
+    ->group(function(){
+    Route::get('/','index')->name('index');
+    Route::get('/create', 'create')->name('create');
+    Route::post('/create','store')->name('store');
+    //Route::get('/{user:email}','show')->name('show');
+    Route::get('/{user}','show')->name('show')
+        ->missing(function(Request $request){
+            return redirect()->route('user.index');
+        });
+    Route::get('/edit/{user}','edit')->name('edit');
+    Route::put('/update/{id}','update')->name('update');
+    Route::delete('/delete/{user}','destroy')->name('destroy');
+});
+
+Route::fallback(function(){
+   dd("Essa rota não existe");
+});
+
+//Route::resource("/usuarios", UsersController::class);
